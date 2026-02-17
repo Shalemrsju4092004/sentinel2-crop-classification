@@ -1,111 +1,126 @@
-# sentinel2-crop-classification
-Machine learning-based crop classification using Sentinel-2 multispectral imagery with spectral indexing and feature engineering.
-# Sentinel-2 Mango Classification using Google Earth Engine
+# Sentinel-2 Multi-Class Land Cover Classification using Google Earth Engine
 
 ## Overview
 
-This project focuses on identifying Mango and Non-Mango areas using Sentinel-2 multispectral imagery in Google Earth Engine (GEE). 
+This project performs 3-class land cover classification using Sentinel-2 multispectral imagery in Google Earth Engine (JavaScript API).
 
-Three supervised classification algorithms were implemented and compared:
+The objective was to distinguish:
+
+- Mango Orchards (Class 1)
+- Other Trees / Vegetation (Class 2)
+- Built-up / Non-vegetation Areas (Class 3)
+
+Three supervised machine learning models were implemented and compared:
 
 - Random Forest (RF)
-- Maximum Likelihood Classifier (MLC)
 - Minimum Distance Classifier (MDC)
-
-The objective was to evaluate classification performance and generate accurate mango orchard maps.
+- Maximum Likelihood Classifier (MLC)
 
 ---
 
 ## Study Area
 
-Region of Interest (ROI): [Add your location here – e.g., Krishna Delta, Andhra Pradesh]
-
-Time Period: [Add date range used]
+Location: Nuzvid, Andhra Pradesh, India  
+Time Period: 2020  
+Satellite Data: Sentinel-2 SR Harmonized  
+Reference Data: ESA WorldCover 2020  
 
 ---
 
-## Data Used
+## Features Used
 
-- Sentinel-2 Level-2A Multispectral Imagery
-- Bands Used: B2 (Blue), B3 (Green), B4 (Red), B8 (NIR)
-- Derived Spectral Index:
-  - NDVI (Normalized Difference Vegetation Index)
+Sentinel-2 Spectral Bands:
+B2, B3, B4, B5, B6, B7, B8, B8A, B11, B12
+
+Vegetation Indices:
+- NDVI
+- EVI
+- SAVI
+- GNDVI
+
+Total Features Used: 14
 
 ---
 
 ## Methodology
 
-1. Data Collection from Sentinel-2 in GEE
-2. Cloud Masking and Preprocessing
-3. ROI Selection and Training Sample Collection
-4. Feature Extraction using spectral bands and NDVI
-5. Model Training using:
-   - Random Forest (RF)
-   - Maximum Likelihood Classifier (MLC)
-   - Minimum Distance Classifier (MDC)
-6. Classification Map Generation
-7. Accuracy Assessment using confusion matrix
+1. Sentinel-2 Image Filtering (Cloud < 20%)
+2. Median Composite Generation
+3. Vegetation Index Computation
+4. Feature Stacking (Bands + Indices)
+5. Stratified Sampling using ESA WorldCover
+6. 70/30 Train-Test Split
+7. Model Training:
+   - Random Forest (150 Trees)
+   - Minimum Distance Classifier
+   - Naive Bayes (as MLC approximation)
+8. Post-classification smoothing
+9. Accuracy Assessment (Confusion Matrix)
+10. External Validation using ESA reference data
 
 ---
 
-## Models Used
+## Classification Performance
 
-### 1. Random Forest (RF)
-Ensemble-based supervised learning algorithm that builds multiple decision trees and aggregates predictions for higher accuracy and robustness.
+### Internal Validation (70/30 Split)
 
-### 2. Maximum Likelihood Classifier (MLC)
-Probabilistic classifier that assumes normal distribution of classes and assigns pixels based on highest probability.
+| Model | Overall Accuracy |
+|-------|------------------|
+| Random Forest (RF) | 74.67% |
+| Minimum Distance (MDC) | 70.72% |
+| Maximum Likelihood (MLC) | 67.27% |
 
-### 3. Minimum Distance Classifier (MDC)
-Distance-based classifier that assigns pixels to the nearest class mean in feature space.
+### External ESA Validation
+
+| Model | Overall Accuracy |
+|-------|------------------|
+| RF vs ESA | 75.48% |
 
 ---
 
-## Results
+## Classification Legend
 
-- Mango areas successfully identified and visualized on the classification map.
-- Random Forest showed higher stability and better classification performance compared to MLC and MDC.
-- Performance was evaluated using overall accuracy and confusion matrix.
+- Yellow → Mango Orchards
+- Green → Other Trees / Vegetation
+- Pink → Built-up / Non-vegetation
 
-(Add your actual accuracy if available)
+---
+
+## Sample Output
+
+![RF Classification](outputs/rf_result.jpg)
+
+---
+
+## Key Findings
+
+- Random Forest achieved the highest accuracy and best class separation.
+- MDC performed moderately well.
+- MLC showed lower stability in multi-class separation.
+- RF demonstrated better generalization when validated against ESA reference data.
 
 ---
 
 ## Technologies Used
 
 - Google Earth Engine (JavaScript API)
-- Sentinel-2 Multispectral Data
-- Remote Sensing & Spectral Indexing
+- Sentinel-2 Multispectral Imagery
+- ESA WorldCover 2020
+- Remote Sensing Feature Engineering
 - Supervised Machine Learning
-
----
-
-## Output
-
-The final output includes:
-- Mango vs Non-Mango classification map
-- Accuracy metrics
-- Comparison between RF, MLC, and MDC
-
-(Add screenshot of output map here)
 
 ---
 
 ## How to Run
 
 1. Open Google Earth Engine Code Editor
-2. Copy the `main.js` script
-3. Replace ROI if needed
-4. Run the script to generate classification results
-
----
-
-## Future Improvements
-
-- Incorporate additional vegetation indices
-- Apply deep learning-based classification
-- Expand study area
-- Multi-season analysis
+2. Copy main.js
+3. Run the script
+4. View classification layers:
+   - RF
+   - MDC
+   - MLC
+5. Check Console for confusion matrices and accuracy
 
 ---
 
@@ -113,4 +128,4 @@ The final output includes:
 
 Shalem Raju  
 B.Tech (AI & ML)  
-KL University  
+KL University
